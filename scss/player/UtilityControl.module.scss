@@ -1,0 +1,75 @@
+@import '../utils.scss';
+@import '../variable.scss';
+
+.utilityControl{
+    width: 20%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @include mobile{
+        display: none;
+    }
+
+
+
+    .volumeControl{
+
+        width: 100%;
+
+        margin: 0 15px;
+        display: flex;
+        align-items: center;
+        
+
+    }
+
+}
+
+.sliderVolume{
+    margin-left: 10px;
+    padding: 15px 0;
+
+    width: 100%;
+    // background-color: $primary-color;
+    height: 10px;
+
+    cursor: pointer;
+
+    &:hover > .sliderVolumeBase > .volume > span{
+        display: block;
+        transition: $smooth;
+    }
+    &:hover > .sliderVolumeBase{
+        box-shadow: 0px 0px 2px 1px white;
+    }
+
+    .sliderVolumeBase{
+        width: 100%;
+        background-color: $text-secondary;
+        height: 4px;
+        border-radius: 15px;
+
+        .volume{   
+            width: 50%;
+            height: 100%;
+            background-color: $text-primary;
+            position: relative;
+            border-radius: 15px;
+
+            & > span{
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 10px;
+                height: 10px;
+                background-color: $text-primary;
+                border-radius: 50%;
+                transform: translateX(50%) translateY(-25%);
+                display: none;
+            }
+        }
+
+    }
+}
