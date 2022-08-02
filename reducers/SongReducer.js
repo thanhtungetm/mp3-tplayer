@@ -1,5 +1,5 @@
 const songReducer = (state, action) => {
-    const { type, song, volume } = action;
+    const { type, song, volume, mode } = action;
     switch (type) {
       case 'SET_SONG': {
         return {
@@ -42,6 +42,12 @@ const songReducer = (state, action) => {
           ...state,
           volume: volume,
         };
+      }
+      case 'SET_MODE':{
+        return{
+          ...state,
+          mode: state.mode==='RA' ? null: (state.mode==='RO' ? 'RA' : 'RO'),
+        }
       }
 
       default:

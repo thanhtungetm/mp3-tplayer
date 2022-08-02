@@ -99,7 +99,8 @@ export default function Player () {
     currentSong: null,
     isPlay: false,
     isLoading: true,
-    volume: 0.5
+    volume: 0.5,
+    mode: 'RO'
   });
   // console.log(state)
   return (

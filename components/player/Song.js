@@ -17,6 +17,9 @@ function Song({ song }) {
 
   const playSong = ()=>{
     // console.log("Play song")
+
+    if(song===currentSong) return
+    
     dispatch({type: 'PAUSE'})
     dispatch({type: 'SET_SONG', song: song})
     dispatch({type: 'SET_LOADING'})
