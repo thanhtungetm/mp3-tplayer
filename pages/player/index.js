@@ -8,7 +8,7 @@ import MusicPlayerContext from "../../context/MusicPlayerContext";
 import songReducer from "../../reducers/SongReducer";
 import NavBar from "../../components/player/NavBar";
 
-export default function ({ songs }) {
+export default function Player ({ songs }) {
   useEffect(() => {
     console.log(songs);
   }, [songs]);
