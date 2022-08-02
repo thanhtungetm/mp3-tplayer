@@ -52,7 +52,7 @@ export default function Player ({songs}) {
 
 // This gets called on every request
 export async function getServerSideProps() {
-  const res = await fetch(`${process.env.HOST || 'http://localhost:3000'}/api/songs`);
+  const res = await fetch(`${process.env.VERCEL_URL || 'http://localhost:3000'}/api/songs`);
   const data = await res.json();
   const songs = data.data;
   // Pass data to the page via props
