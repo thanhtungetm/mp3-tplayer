@@ -1,4 +1,5 @@
 @import "../variable";
+@import "../utils.scss";
 
 .wrapper{
     max-width: 100%;
@@ -15,15 +16,23 @@
 
 
     .navbar{
-        width: 20%;
+        min-width: 220px;
         background-color: $primary-color-light;
         height: 100vh;
+        @include mobile{
+            min-width: 50px;
+        }
     }
     .content{
-        margin-left: 30px;
-        width: 80%;
+        padding: 0 10px;
+        width: calc(100% - 220px);
         display: flex;
         flex-direction: column;
+
+        @include mobile{
+            min-width: calc(100% - 50px);
+            padding: 0 5px;
+        }
     }
 }
 

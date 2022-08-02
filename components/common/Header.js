@@ -22,7 +22,7 @@ export function Header() {
           <FontAwesomeIcon icon={faGear} style={{ fontSize: 30 }} />
           <Image
             className={cls(styles.avatarImg)}
-            src="/images/avt.jpg"
+            src="/images/avt.webp"
             width={35}
             height={35}
             layout="fixed"

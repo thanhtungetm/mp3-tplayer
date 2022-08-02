@@ -6,6 +6,7 @@ import { PlayerCotrol, PlayList } from "../../components/player/";
 import { useEffect, useReducer } from "react";
 import MusicPlayerContext from "../../context/MusicPlayerContext";
 import songReducer from "../../reducers/SongReducer";
+import NavBar from "../../components/player/NavBar";
 
 export default function ({ songs }) {
   useEffect(() => {
@@ -16,6 +17,7 @@ export default function ({ songs }) {
     currentSong: null,
     isPlay: false,
     isLoading: true,
+    volume: 0.5
   });
   // console.log(state)
   return (
@@ -26,7 +28,9 @@ export default function ({ songs }) {
       <MusicPlayerContext.Provider value={{ songs, state, dispatch }}>
         <div className={cls(styles.wrapper)}>
           <div className={cls(styles.container)}>
-            <div className={cls(styles.navbar)}>nav</div>
+            <div className={cls(styles.navbar)}>
+              <NavBar />
+            </div>
             <div className={cls(styles.content)}>
               <Header />
               <PlayList />

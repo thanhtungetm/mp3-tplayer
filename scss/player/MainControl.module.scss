@@ -2,7 +2,7 @@
 @import '../utils.scss';
 
 .mainControl{
-    width: 60%;
+    width: 50%;
     // background: red;
 
     display: flex;
@@ -83,6 +83,10 @@
         display: flex;
         align-items: center;
 
+        @include mobile{
+            padding:  0 5px;
+        }
+
         .sliderVolumeBase{
             
             padding: 10px 5px;
@@ -142,6 +146,11 @@
 
             
 
+        }
+
+        & > span{
+            width: 70px;
+            text-align: center;
         }
 
         

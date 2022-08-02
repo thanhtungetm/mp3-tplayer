@@ -1,5 +1,5 @@
 const songReducer = (state, action) => {
-    const { type, song } = action;
+    const { type, song, volume } = action;
     switch (type) {
       case 'SET_SONG': {
         return {
@@ -35,6 +35,12 @@ const songReducer = (state, action) => {
         return {
           ...state,
           isLoading: false,
+        };
+      }
+      case 'SET_VOLUME': {
+        return {
+          ...state,
+          volume: volume,
         };
       }
 

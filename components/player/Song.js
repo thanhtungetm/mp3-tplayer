@@ -36,7 +36,10 @@ function Song({ song }) {
             </div>}
           </div>
           
-          <span>{name}</span>
+          <div>
+            <span>{name}</span>
+            <span className={styles.singerHidden}>{singer}</span>
+          </div>
         </div>
         <div className={cls(styles.singer)}>
           <span>{singer}</span>

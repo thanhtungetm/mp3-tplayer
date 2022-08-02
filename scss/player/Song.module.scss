@@ -14,6 +14,19 @@
     padding: 15px 0;
 
 
+    @include mobile{
+        // flex-direction: column;
+
+        & .name{
+            width: 100%!important;
+        }
+
+        & .singer{
+            display: none!important;
+        }
+    }
+
+
 
     & .name{
         width: 50%;
@@ -22,6 +35,17 @@
         display: flex;
         align-items: center;
 
+        & .singerHidden{
+            display: none;
+            color: $text-secondary;
+            @include mobile{
+                display: block;
+            }
+        }
+
+        // @include mobile{
+
+        // }
 
         & .avtImg{
             position: relative;
@@ -96,6 +120,11 @@
     &:hover .singer svg{
         display: block;
         transition: $smooth;
+        
+        @include mobile{
+            display: none!important;
+        }
+        
     }
 
     &:hover{

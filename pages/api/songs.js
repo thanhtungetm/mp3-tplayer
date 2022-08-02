@@ -15,11 +15,15 @@ async function getSongList(){
       const data = await ZingMp3.getInfoSong(song)
       const playData =  await ZingMp3.getSong(song)
       // console.log(data)
+      const time = data.data.duration
       const songInfo = {}
+
       songInfo.id = data.data.encodeId
       songInfo.name = data.data.title
       songInfo.singer = data.data.artistsNames
       songInfo.imgUrl = data.data.thumbnailM
+      
+      songInfo.time = `${String(Math.floor(time/60)).padStart(2, '0')} : ${String(Math.floor(time%60)).padStart(2, '0')}`
       songInfo.source = playData.data['128']
       songList.push(songInfo)
     }
@@ -29,6 +33,8 @@ async function getSongList(){
 
 
 const list =[
+  'ZZDI7978',
+  'ZZDW807B',
   'ZZE886WC',
   'ZWBUB79W',
   'ZZDI9B7U',
