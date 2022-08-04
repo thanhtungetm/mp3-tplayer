@@ -1,17 +1,17 @@
-import cls from "classnames";
-import styles from "../../scss/player/MainControl.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faPlay,
-  faShuffle,
-  faForwardStep,
   faBackwardStep,
-  faRepeat,
+  faForwardStep,
   faPause,
+  faPlay,
+  faRepeat,
+  faShuffle,
 } from "@fortawesome/free-solid-svg-icons";
-import MusicPlayerContext from "../../context/MusicPlayerContext";
-import { useContext, useEffect, useRef, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import cls from "classnames";
 import Image from "next/dist/client/image";
+import { useContext, useEffect, useRef, useState } from "react";
+import MusicPlayerContext from "../../context/MusicPlayerContext";
+import styles from "../../scss/player/MainControl.module.scss";
 
 export function MainControl() {
   const {
@@ -26,23 +26,13 @@ export function MainControl() {
   const [currentPercent, setCurrentPercent] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [firstLoad, setFirstLoad] = useState(true);
-  // const [duration, setDuration] = useState(0)
 
+  //Catch play event
   useEffect(() => {
     if (isPlay) {
       console.warn("PLAY");
       audio.current.play();
-
-      const id = setInterval(() => {
-        const percent =
-          (audio.current.currentTime / audio.current.duration) * 100;
-        setCurrentPercent(percent);
-        setCurrentTime(audio.current.currentTime);
-        if (audio.current.ended) {
-          dispatch({ type: "PAUSE" });
-        }
-      }, 1000);
-      setUpdateSilerbar(id);
+      updateCurrentState();
     } else {
       console.warn("PAUSE");
       audio.current.pause();
@@ -52,6 +42,20 @@ export function MainControl() {
       clearInterval(updateSilerbar);
     }
   }, [isPlay]);
+
+  //Update current state of the song
+  const updateCurrentState = () => {
+    const id = setInterval(() => {
+      const percent =
+        (audio.current.currentTime / audio.current.duration) * 100;
+      setCurrentPercent(percent);
+      setCurrentTime(audio.current.currentTime);
+      if (audio.current.ended) {
+        dispatch({ type: "PAUSE" });
+      }
+    }, 1000);
+    setUpdateSilerbar(id);
+  };
 
   //handle when duration of song ended
   const handleNextSong = () => {
@@ -69,7 +73,6 @@ export function MainControl() {
     }
     clearInterval(updateSilerbar);
   };
-
 
   //  Set source of audio when currentSong is changged
   useEffect(() => {
@@ -103,10 +106,7 @@ export function MainControl() {
     }
   }, [isLoading]);
 
-  const togglePlay = () => {
-    dispatch({ type: "TOGGLE" });
-  };
-
+  //Change next (or privious) song
   const changeSong = (type) => {
     console.log("Next");
     let currentIndex = songs.indexOf(currentSong);
@@ -135,22 +135,68 @@ export function MainControl() {
     dispatch({ type: "SET_MODE" });
   };
 
-  useEffect(() => {
-    console.log("CHANGE_MODE: ",mode);
-  }, [mode]);
-
   //Change current time
   const changeCurrentime = (e) => {
-    const clientX = e.clientX;
+    let clientX = null
+    if(e.type ==='touchstart'){
+      clientX = e.touches[0].clientX
+    }else{
+      clientX = e.clientX
+    }
+    
     const durationX = durationBar.current.getBoundingClientRect().x;
     const durationWidth = durationBar.current.getBoundingClientRect().width;
-    const lenght = clientX - durationX;
-    const percent = lenght / durationWidth;
-    audio.current.currentTime = percent * audio.current.duration;
-    setCurrentPercent(percent*100)
-    setCurrentTime(audio.current.currentTime);
+    let percent = (clientX - durationX) / durationWidth;
+
+    clearInterval(updateSilerbar);
+
+    const handleMoving = (e) => {
+      let moveClientX = null
+      if(e.type==='touchmove')
+        moveClientX = e.touches[0].clientX
+      else
+        moveClientX =e.clientX
+  
+      if (moveClientX < durationX || moveClientX > durationX + durationWidth)
+        return;
+      const lenght = moveClientX - durationX;
+      percent = lenght / durationWidth;
+      setCurrentPercent(percent * 100);
+      setCurrentTime(percent * audio.current.duration);
+    };
+  
+    const handleStopMove = () => {
+      audio.current.currentTime = percent * audio.current.duration;
+      setCurrentPercent(percent * 100);
+      setCurrentTime(audio.current.currentTime);
+  
+      updateCurrentState();
+  
+      window.onmousemove = null;
+      window.onmouseup = null;
+      window.ontouchmove = null
+      window.ontouchend = null
+      
+    };
+
+    window.onmousemove = handleMoving
+    window.ontouchmove = handleMoving
+    window.onmouseup = handleStopMove
+    window.ontouchend = handleStopMove
   };
 
+
+  const togglePlay = () => {
+    dispatch({ type: "TOGGLE" });
+  };
+
+  useEffect(()=>{
+    window.onkeydown = (e)=>{
+      console.log(e.code);
+      if(e.code==='Space')
+        dispatch({ type:'TOGGLE'})
+    }
+  },[])
 
   return (
     <div className={cls(styles.mainControl)}>
@@ -203,13 +249,14 @@ export function MainControl() {
       </div>
       <div className={cls(styles.durationBar)}>
         <span>
-          {String(Math.floor(currentTime / 60)).padStart(2, "0")} :{" "}
+          {String(Math.floor((currentTime + 1) / 60)).padStart(2, "0")} :{" "}
           {String(Math.floor(currentTime % 60)).padStart(2, "0")}
         </span>
         <div
           ref={durationBar}
           className={cls(styles.sliderVolumeBase)}
           onMouseDown={changeCurrentime}
+          onTouchStart={changeCurrentime}
         >
           <div className={cls(styles.sliderBar)}>
             <div

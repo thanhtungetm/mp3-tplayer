@@ -37,8 +37,12 @@
                 text-align: center;
                 color: $text-secondary;
         
-                @include mobile{
-                    display: none;
+                
+            }
+            @include mobile{
+                & .singer,
+                & .time{
+                display: none;
                 }
             }
             border-bottom: 1px $text-secondary solid;

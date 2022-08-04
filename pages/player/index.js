@@ -83,9 +83,9 @@ const fixedData = [
   }
 ]
 
-export default function Player () {
+export default function Player ({songs}) {
 
-  const [songs, setSongs] = useState(fixedData)
+  // const [songs, setSongs] = useState(fixedData)
 
 
 
@@ -127,10 +127,10 @@ export default function Player () {
 }
 
 // // This gets called on every request
-// export async function getServerSideProps() {
-//   const res = await fetch(`${process.env.VERCEL_URL || 'http://localhost:3000'}/api/songs`);
-//   const data = await res.json();
-//   const songs = data.data;
-//   // Pass data to the page via props
-//   return { props: { songs } };
-// }
+export async function getServerSideProps() {
+  const res = await fetch(`${process.env.VERCEL_URL || 'https://mp3-tplayer.vercel.app'}/api/songs`);
+  const data = await res.json();
+  const songs = data.data;
+  // Pass data to the page via props
+  return { props: { songs } };
+}
