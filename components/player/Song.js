@@ -1,65 +1,83 @@
 import Image from "next/dist/client/image";
-import cls from "classnames"
-import styles from "../../scss/player/Song.module.scss"
+import cls from "classnames";
+import styles from "../../scss/player/Song.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlay,
-  faHeart
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faHeart } from "@fortawesome/free-solid-svg-icons";
 import MusicPlayerContext from "../../context/MusicPlayerContext";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 
-function Song({ song }) {
-    const { name, singer, time, imgUrl } = song;
-    const {dispatch, addSource, state: { currentSong, isLoading}} = useContext(MusicPlayerContext)
+function Song({ song, noneHeart, handleNewSong }) {
+  const songRef = useRef(null);
 
-    // console.log(song)
+  const { name, singer, time, imgUrl } = song;
+  const {
+    dispatch,
+    state: { currentSong, isLoading },
+  } = useContext(MusicPlayerContext);
 
-  const playSong = async ()=>{
-    if(!song.source){
+  useEffect(() => {
+    if (currentSong == song) {
+      songRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [currentSong]);
+
+  const playSong = async () => {
+    if (handleNewSong) {
+      handleNewSong(song);
+    }
+
+    if (!song.source) {
       console.log("Not source, get Source");
-      const res = await fetch('/api/song/'+song.id)
+      const res = await fetch("/api/song/" + song.id);
       const data = await res.json();
-      addSource(song.id, data.data.data['128'])
-      console.log(data.data.data['128']);
-      
-    }else{
+
+      song.source = data.data.data["128"];
+    } else {
       console.log("Alredy has the source");
     }
 
-    if(song===currentSong) return
-    
-    dispatch({type: 'PAUSE'})
-    dispatch({type: 'SET_SONG', song: song})
-    dispatch({type: 'SET_LOADING'})
-  }
+    if (song.id === currentSong.id) return;
 
-    return (
-      <div className={cls([styles.song], {[styles.active]: currentSong == song})} onClick={playSong}>
-        <div className={cls(styles.name)}>
-          <div className={cls(styles.avtImg)}>
-            <Image src={imgUrl} width={35} height={35}></Image>
-            { currentSong !== song ? <div>
+    dispatch({ type: "PAUSE" });
+    dispatch({ type: "SET_SONG", song: song });
+    dispatch({ type: "SET_LOADING" });
+  };
+
+  return (
+    <div
+      ref={songRef}
+      className={cls([styles.song], { [styles.active]: currentSong == song })}
+      onClick={playSong}
+    >
+      <div className={cls(styles.name)}>
+        <div className={cls(styles.avtImg)}>
+          <Image src={imgUrl} width={35} height={35}></Image>
+          {currentSong !== song ? (
+            <div>
               <FontAwesomeIcon icon={faPlay} />
             </div>
-            :
-            <div className={cls({[styles.playingGif]: currentSong == song})}>
-              <Image src='/images/playing.gif' width={20} height={20} />
-            </div>}
-          </div>
-          
-          <div>
-            <span>{name}</span>
-            <span className={styles.singerHidden}>{singer}</span>
-          </div>
+          ) : (
+            <div className={cls({ [styles.playingGif]: currentSong == song })}>
+              <Image src="/images/playing.gif" width={20} height={20} />
+            </div>
+          )}
         </div>
-        <div className={cls(styles.singer)}>
-          <span>{singer}</span>
-          <FontAwesomeIcon icon={faHeart} />
+
+        <div>
+          <span>{name}</span>
+          <span className={styles.singerHidden}>{singer}</span>
         </div>
-        <div className={cls(styles.time)}>{time}</div>
       </div>
-    );
-  }
-  
+      <div className={cls(styles.singer)}>
+        <span>{singer}</span>
+        {!noneHeart && <FontAwesomeIcon icon={faHeart} />}
+      </div>
+      {!noneHeart && <div className={cls(styles.time)}>{time}</div>}
+    </div>
+  );
+}
+
 export default Song;

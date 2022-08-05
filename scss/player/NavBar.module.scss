@@ -22,6 +22,16 @@
 
         flex-direction: column;
 
+        & .active{
+            background-color: $primary-color;
+            span{
+                color: $text-secondary;
+            }
+            svg{
+                color: $text-primary;
+            }
+        }
+
         & > ul{
             width: 100%;
             

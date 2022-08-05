@@ -4,7 +4,7 @@ import {
   faPause,
   faPlay,
   faRepeat,
-  faShuffle,
+  faShuffle
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cls from "classnames";
@@ -202,15 +202,9 @@ export function MainControl() {
   };
 
   const togglePlay = () => {
+    if (isLoading) return;
     dispatch({ type: "TOGGLE" });
   };
-
-  useEffect(() => {
-    window.onkeydown = (e) => {
-      console.log(e.code);
-      if (e.code === "Space") dispatch({ type: "TOGGLE" });
-    };
-  }, []);
 
   return (
     <div className={cls(styles.mainControl)}>

@@ -1,7 +1,4 @@
-import {
-  faVolumeHigh,
-  faVolumeMute
-} from "@fortawesome/free-solid-svg-icons";
+import { faVolumeHigh, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cls from "classnames";
 import { useContext, useRef } from "react";
@@ -24,28 +21,24 @@ export function UtilityControl() {
     const volumeWidth = volumeSlider.current.getBoundingClientRect().width;
 
     const percent = (clientX - volumeX) / volumeWidth;
-    if(percent<0)
-      percent = 0
-    if(percent>1){
-      percent = 1
+    if (percent < 0) percent = 0;
+    if (percent > 1) {
+      percent = 1;
     }
     dispatch({ type: "SET_VOLUME", volume: percent.toFixed(2) });
   };
 
   const changeVerticalVolume = (e) => {
-    let clientY
-    if(e.type==='touchstart')
-      clientY = e.touches[0].clientY;
-    else 
-      clientY = e.clientY;
+    let clientY;
+    if (e.type === "touchstart") clientY = e.touches[0].clientY;
+    else clientY = e.clientY;
     const volumeY = verticalVolumeSlider.current.getBoundingClientRect().y;
     const volumeHeight =
       verticalVolumeSlider.current.getBoundingClientRect().height;
     const percent = 1 - (clientY - volumeY) / volumeHeight;
-    if(percent<0)
-      percent = 0
-    if(percent>1){
-      percent = 1
+    if (percent < 0) percent = 0;
+    if (percent > 1) {
+      percent = 1;
     }
     dispatch({ type: "SET_VOLUME", volume: percent.toFixed(2) });
   };
@@ -54,7 +47,7 @@ export function UtilityControl() {
     <div className={cls(styles.utilityControl)}>
       <div className={cls(styles.volumeControl)}>
         {volume == 0.0 ? (
-          <FontAwesomeIcon icon={faVolumeMute}/>
+          <FontAwesomeIcon icon={faVolumeMute} />
         ) : (
           <FontAwesomeIcon icon={faVolumeHigh} />
         )}

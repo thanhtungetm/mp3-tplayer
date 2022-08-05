@@ -32,7 +32,25 @@
         border-radius: 25px;
         
         cursor: pointer;
+        position: relative;
 
+
+        & > input:focus + .searchResult{
+            display: block!important;
+        }
+        & .searchResult:hover{
+            display: block!important;
+        }
+
+        & > .searchResult{
+            display: none;
+            background-color: $primary-color-light;
+            width: 100%;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 5;
+        }
 
 
         & > input{
@@ -52,6 +70,8 @@
                 transition: --smooth;
             }
         }
+
+
     }
     
     .links{

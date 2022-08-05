@@ -9,9 +9,8 @@ import MusicPlayerContext from "../../context/MusicPlayerContext";
 export function PlayListHeader() {
   const {
     state: { currentSong, isPlay },
-    dispatch
+    dispatch,
   } = useContext(MusicPlayerContext);
-
 
   const togglePlay = () => {
     dispatch({ type: "TOGGLE" });
@@ -28,14 +27,14 @@ export function PlayListHeader() {
           layout="responsive"
         />
 
-        <div className={cls(styles.imageOverPlay, {[styles.showPlaying]: isPlay})} >
+        <div
+          className={cls(styles.imageOverPlay, {
+            [styles.showPlaying]: isPlay,
+          })}
+        >
           {isPlay ? (
             <div className={styles.playingIcon} onClick={togglePlay}>
-              <Image
-                src="/images/playing.gif"
-                width={60}
-                height={60}
-              />
+              <Image src="/images/playing.gif" width={60} height={60} />
             </div>
           ) : (
             <div onClick={togglePlay}>

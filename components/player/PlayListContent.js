@@ -1,16 +1,11 @@
 import cls from "classnames";
-import styles from "../../scss/player/PlayListContent.module.scss";
-import Image from "next/dist/client/image";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import Song from "./Song";
 import { useContext } from "react";
 import MusicPlayerContext from "../../context/MusicPlayerContext";
-
+import styles from "../../scss/player/PlayListContent.module.scss";
+import Song from "./Song";
 
 function PlayListContent() {
-
-  const {songs} = useContext(MusicPlayerContext)
+  const { songs } = useContext(MusicPlayerContext);
   // console.log("Song from context",songs)
   return (
     <div className={cls(styles.playListContent, styles.scroll)}>
