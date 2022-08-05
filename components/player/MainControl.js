@@ -18,6 +18,7 @@ export function MainControl() {
     state: { currentSong, isPlay, isLoading, volume, mode },
     songs,
     dispatch,
+    addSource,
   } = useContext(MusicPlayerContext);
   const audio = useRef(null);
   const durationBar = useRef(null);
@@ -83,7 +84,15 @@ export function MainControl() {
       };
     } else {
       const song = songs[Math.floor(Math.random() * songs.length)];
-      dispatch({ type: "SET_SONG", song });
+      console.log("Not source, get Source");
+      fetch("/api/song/" + song.id)
+        .then((res) => res.json())
+        .then((data) => {
+          addSource(song.id, data.data.data["128"]);
+          dispatch({ type: "SET_SONG", song });
+        });
+
+      // console.log(data.data.data['128']);
     }
   }, [currentSong]);
 
@@ -107,7 +116,7 @@ export function MainControl() {
   }, [isLoading]);
 
   //Change next (or privious) song
-  const changeSong = (type) => {
+  const changeSong = async (type) => {
     console.log("Next");
     let currentIndex = songs.indexOf(currentSong);
 
@@ -124,9 +133,19 @@ export function MainControl() {
         currentIndex = 0;
       }
     }
+    const song = songs[currentIndex];
+    if (!song.source) {
+      console.log("Not source, get Source");
+      const res = await fetch("/api/song/" + song.id);
+      const data = await res.json();
+      addSource(song.id, data.data.data["128"]);
+      console.log(data.data.data["128"]);
+    } else {
+      console.log("Alredy has the source");
+    }
 
     dispatch({ type: "PAUSE" });
-    dispatch({ type: "SET_SONG", song: songs[currentIndex] });
+    dispatch({ type: "SET_SONG", song });
     dispatch({ type: "SET_LOADING" });
   };
 
@@ -137,13 +156,13 @@ export function MainControl() {
 
   //Change current time
   const changeCurrentime = (e) => {
-    let clientX = null
-    if(e.type ==='touchstart'){
-      clientX = e.touches[0].clientX
-    }else{
-      clientX = e.clientX
+    let clientX = null;
+    if (e.type === "touchstart") {
+      clientX = e.touches[0].clientX;
+    } else {
+      clientX = e.clientX;
     }
-    
+
     const durationX = durationBar.current.getBoundingClientRect().x;
     const durationWidth = durationBar.current.getBoundingClientRect().width;
     let percent = (clientX - durationX) / durationWidth;
@@ -151,12 +170,10 @@ export function MainControl() {
     clearInterval(updateSilerbar);
 
     const handleMoving = (e) => {
-      let moveClientX = null
-      if(e.type==='touchmove')
-        moveClientX = e.touches[0].clientX
-      else
-        moveClientX =e.clientX
-  
+      let moveClientX = null;
+      if (e.type === "touchmove") moveClientX = e.touches[0].clientX;
+      else moveClientX = e.clientX;
+
       if (moveClientX < durationX || moveClientX > durationX + durationWidth)
         return;
       const lenght = moveClientX - durationX;
@@ -164,39 +181,36 @@ export function MainControl() {
       setCurrentPercent(percent * 100);
       setCurrentTime(percent * audio.current.duration);
     };
-  
+
     const handleStopMove = () => {
       audio.current.currentTime = percent * audio.current.duration;
       setCurrentPercent(percent * 100);
       setCurrentTime(audio.current.currentTime);
-  
+
       updateCurrentState();
-  
+
       window.onmousemove = null;
       window.onmouseup = null;
-      window.ontouchmove = null
-      window.ontouchend = null
-      
+      window.ontouchmove = null;
+      window.ontouchend = null;
     };
 
-    window.onmousemove = handleMoving
-    window.ontouchmove = handleMoving
-    window.onmouseup = handleStopMove
-    window.ontouchend = handleStopMove
+    window.onmousemove = handleMoving;
+    window.ontouchmove = handleMoving;
+    window.onmouseup = handleStopMove;
+    window.ontouchend = handleStopMove;
   };
-
 
   const togglePlay = () => {
     dispatch({ type: "TOGGLE" });
   };
 
-  useEffect(()=>{
-    window.onkeydown = (e)=>{
+  useEffect(() => {
+    window.onkeydown = (e) => {
       console.log(e.code);
-      if(e.code==='Space')
-        dispatch({ type:'TOGGLE'})
-    }
-  },[])
+      if (e.code === "Space") dispatch({ type: "TOGGLE" });
+    };
+  }, []);
 
   return (
     <div className={cls(styles.mainControl)}>

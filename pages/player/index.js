@@ -86,8 +86,8 @@ const fixedData = [
 
 
 export default function Player (props) {
-  const {songs} = props
-  // const [songs, setSongs] = useState(fixedData)
+  // const {songs} = props
+  const [songs, setSongs] = useState(props.songs)
 
 
 
@@ -105,13 +105,20 @@ export default function Player (props) {
     mode: 'RO'
   });
   // console.log(state)
+
+  const addSource = (idSong, source)=>{
+    const newSongs = [...songs]
+    const song = newSongs.find(s => s.id === idSong)
+    song.source = source
+  }
+
   return (
     <>
       <Head>
         <title>MP3 Player</title>
-        <link rel="icon" href="/images/logo" />
+        <link rel="icon" href="/images/logo.png" />
       </Head>
-      <MusicPlayerContext.Provider value={{ songs, state, dispatch }}>
+      <MusicPlayerContext.Provider value={{ songs, state, addSource, dispatch }}>
         <div className={cls(styles.wrapper)}>
           <div className={cls(styles.container)}>
             <div className={cls(styles.navbar)}>
@@ -132,7 +139,7 @@ export default function Player (props) {
 // This gets called on every request
 export async function getServerSideProps() {
   console.log("ENV",process.env.HOST)
-  const res = await fetch(`${process.env.HOST}/api/songs`);
+  const res = await fetch(`${process.env.HOST}/api/getTop`);
   const data = await res.json();
   const songs = data.data;
   // Pass data to the page via props

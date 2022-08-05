@@ -11,12 +11,21 @@ import { useContext, useRef } from "react";
 
 function Song({ song }) {
     const { name, singer, time, imgUrl } = song;
-    const {dispatch, state: { currentSong, isLoading}} = useContext(MusicPlayerContext)
+    const {dispatch, addSource, state: { currentSong, isLoading}} = useContext(MusicPlayerContext)
 
     // console.log(song)
 
-  const playSong = ()=>{
-    // console.log("Play song")
+  const playSong = async ()=>{
+    if(!song.source){
+      console.log("Not source, get Source");
+      const res = await fetch('/api/song/'+song.id)
+      const data = await res.json();
+      addSource(song.id, data.data.data['128'])
+      console.log(data.data.data['128']);
+      
+    }else{
+      console.log("Alredy has the source");
+    }
 
     if(song===currentSong) return
     
