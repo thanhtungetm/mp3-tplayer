@@ -41,6 +41,7 @@
                 padding: 15px 20px;
                 display: flex;
                 align-items: center;
+                
                 transition: $smooth;
 
                 cursor: pointer;
@@ -80,6 +81,7 @@
 
                 @include mobile{
                     padding: 10px 5px;
+                    justify-content: center;
 
                 }
             }

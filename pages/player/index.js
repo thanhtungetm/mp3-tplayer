@@ -16,8 +16,9 @@ export default function Player(props) {
     currentSong: null,
     isPlay: false,
     isLoading: true,
-    volume: 0.5,
+    volume: 0.9,
     mode: "RA",
+    random: true,
   });
 
   const addSource = (idSong, source) => {
@@ -35,7 +36,7 @@ export default function Player(props) {
     <>
       <Head>
         <title>MP3 Player</title>
-        <link rel="icon" href="/images/logo.png" />
+        <link rel="icon" href="/images/icon.png" />
       </Head>
       <MusicPlayerContext.Provider
         value={{ songs, state, addSource, addNewSong, dispatch }}

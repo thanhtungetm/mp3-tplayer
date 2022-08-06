@@ -49,6 +49,12 @@ const songReducer = (state, action) => {
         mode: state.mode === "RA" ? null : state.mode === "RO" ? "RA" : "RO",
       };
     }
+    case "TOGGLE_RANDOM":{
+      return {
+        ...state,
+        random: !state.random
+      }
+    }
 
     default:
       return state;

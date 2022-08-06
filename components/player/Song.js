@@ -8,6 +8,7 @@ import { useContext, useEffect, useRef } from "react";
 
 function Song({ song, noneHeart, handleNewSong }) {
   const songRef = useRef(null);
+  
 
   const { name, singer, time, imgUrl } = song;
   const {
@@ -15,8 +16,10 @@ function Song({ song, noneHeart, handleNewSong }) {
     state: { currentSong, isLoading },
   } = useContext(MusicPlayerContext);
 
+  const isActive = currentSong?.id === song.id
+
   useEffect(() => {
-    if (currentSong == song) {
+    if (isActive) {
       songRef.current.scrollIntoView({
         behavior: "smooth",
         block: "center",
@@ -25,9 +28,13 @@ function Song({ song, noneHeart, handleNewSong }) {
   }, [currentSong]);
 
   const playSong = async () => {
+
+    if (song.id === currentSong.id) return;
     if (handleNewSong) {
       handleNewSong(song);
     }
+    dispatch({ type: "PAUSE" });
+    dispatch({ type: "SET_LOADING" });
 
     if (!song.source) {
       console.log("Not source, get Source");
@@ -39,17 +46,19 @@ function Song({ song, noneHeart, handleNewSong }) {
       console.log("Alredy has the source");
     }
 
-    if (song.id === currentSong.id) return;
+    
 
-    dispatch({ type: "PAUSE" });
+    
     dispatch({ type: "SET_SONG", song: song });
-    dispatch({ type: "SET_LOADING" });
+    
   };
+
+  
 
   return (
     <div
       ref={songRef}
-      className={cls([styles.song], { [styles.active]: currentSong == song })}
+      className={cls([styles.song], { [styles.active]: isActive })}
       onClick={playSong}
     >
       <div className={cls(styles.name)}>
@@ -60,7 +69,7 @@ function Song({ song, noneHeart, handleNewSong }) {
               <FontAwesomeIcon icon={faPlay} />
             </div>
           ) : (
-            <div className={cls({ [styles.playingGif]: currentSong == song })}>
+            <div className={cls({ [styles.playingGif]: isActive })}>
               <Image src="/images/playing.gif" width={20} height={20} />
             </div>
           )}

@@ -15,11 +15,12 @@ import styles from "../../scss/player/MainControl.module.scss";
 
 export function MainControl() {
   const {
-    state: { currentSong, isPlay, isLoading, volume, mode },
+    state: { currentSong, isPlay, isLoading, volume, mode, random },
     songs,
     dispatch,
     addSource,
   } = useContext(MusicPlayerContext);
+
   const audio = useRef(null);
   const durationBar = useRef(null);
 
@@ -27,6 +28,8 @@ export function MainControl() {
   const [currentPercent, setCurrentPercent] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [firstLoad, setFirstLoad] = useState(true);
+
+  const [playedRandomList, setPlayedRandomList] = useState([])
 
   //Catch play event
   useEffect(() => {
@@ -75,6 +78,27 @@ export function MainControl() {
     clearInterval(updateSilerbar);
   };
 
+  //handle random
+  const handleRandomSong  = ()=>{
+    let indexRand
+
+    do{
+      indexRand = Math.floor(Math.random() * songs.length)
+    }while(playedRandomList.indexOf(indexRand)!=-1)
+    console.log("Index Random", indexRand);
+    setPlayedRandomList([...playedRandomList, indexRand])
+
+    return indexRand
+  }
+
+  // Set playedRandomList empty when it's fulled
+  useEffect(() => {
+    if(playedRandomList.length == songs.legnth){
+      setPlayedRandomList([])
+    }
+  },[playedRandomList])
+
+
   //  Set source of audio when currentSong is changged
   useEffect(() => {
     if (currentSong) {
@@ -117,7 +141,7 @@ export function MainControl() {
 
   //Change next (or privious) song
   const changeSong = async (type) => {
-    console.log("Next");
+
     let currentIndex = songs.indexOf(currentSong);
 
     if (type == -1) {
@@ -133,6 +157,14 @@ export function MainControl() {
         currentIndex = 0;
       }
     }
+
+    if(random){
+      currentIndex = handleRandomSong()
+      // return
+    }
+
+    dispatch({ type: "PAUSE" });
+    dispatch({ type: "SET_LOADING" });
     const song = songs[currentIndex];
     if (!song.source) {
       console.log("Not source, get Source");
@@ -144,9 +176,9 @@ export function MainControl() {
       console.log("Alredy has the source");
     }
 
-    dispatch({ type: "PAUSE" });
+    
     dispatch({ type: "SET_SONG", song });
-    dispatch({ type: "SET_LOADING" });
+    
   };
 
   //handleChangeMode
@@ -206,11 +238,18 @@ export function MainControl() {
     dispatch({ type: "TOGGLE" });
   };
 
+  const toggleRandom = () => {
+    dispatch({ type: "TOGGLE_RANDOM" });
+  };
+
+
   return (
     <div className={cls(styles.mainControl)}>
       <div className={cls(styles.controlBtn)}>
-        <div className={cls(styles.btnWrapper)}>
-          <FontAwesomeIcon icon={faShuffle} />
+        <div className={cls(styles.btnWrapper)} onClick={toggleRandom}>
+          <FontAwesomeIcon className={cls({
+              [styles.activeRandom]: random == true,
+            })} icon={faShuffle} />
         </div>
         <div className={cls(styles.btnWrapper)} onClick={() => changeSong(-1)}>
           <FontAwesomeIcon icon={faBackwardStep} />
@@ -236,7 +275,7 @@ export function MainControl() {
               [styles.playBtn]: true,
               [styles.pauseBtn]: isPlay,
             })}
-            onClick={togglePlay}
+            // onClick={togglePlay}
           >
             <Image src="/images/loading.gif" width={30} height={30} />
           </div>
