@@ -116,7 +116,7 @@ export default function Favourite(props) {
                     <div className="relative w-fit px-3 py-3 bg-purple-500 text-center shadow-lg rounded-sm">
                         <h3 className="text-xl">Vui lòng đăng nhập</h3>
                         <span
-                            className="px-3 py-1 bg-gray-600 rounded-lg my-2 inline-block cursor-pointer"
+                            className="px-3 py-1 bg-gray-600 text-white rounded-lg my-2 inline-block cursor-pointer"
                             onClick={() => router.push(`/`)}
                         >
                             Ok

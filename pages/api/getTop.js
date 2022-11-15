@@ -1,6 +1,6 @@
 import { ZingMp3 } from 'zingmp3-api-full/dist'
 
-export default function (req, res) {
+export default function getTop(req, res) {
     ZingMp3.getDetailPlaylist('ZWZB969E').then((data) => {
         const songs = data.data.song.items
         const list = []
@@ -10,7 +10,7 @@ export default function (req, res) {
                 id: song.encodeId,
                 name: song.title,
                 singer: song.artistsNames,
-                imgUrl: song.thumbnailM,
+                img: song.thumbnailM,
                 time: `${String(Math.floor(song.duration / 60)).padStart(2, '0')} : ${String(
                     Math.floor(song.duration % 60)
                 ).padStart(2, '0')}`,

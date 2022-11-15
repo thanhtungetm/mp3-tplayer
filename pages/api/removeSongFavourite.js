@@ -4,7 +4,7 @@ export default async function handler(req, res) {
         console.log('req nom', req.body)
         const { username, songId } = req.body
         const result = await excuteQuery({
-            query: 'DELETE FROM favourites WHERE username = ? and song_id = ?',
+            query: 'DELETE FROM favourites WHERE username = ? and id = ?',
             values: [username, songId],
         })
 

@@ -18,7 +18,7 @@ function Song({ song, noneHeart, handleNewSong }) {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
 
-    const { name, singer, time, imgUrl } = song
+    const { name, singer, time, img } = song
     const {
         dispatch,
         state: { currentSong, isLoading },
@@ -65,10 +65,7 @@ function Song({ song, noneHeart, handleNewSong }) {
         try {
             setLoading(true)
             console.log('ADD Favourite:' + song.id)
-            const res = await axios.post('/api/addSongFavourite', {
-                username: user.username,
-                songId: song.id,
-            })
+            const res = await axios.post('/api/addSongFavourite', {username: user.username,...song})
             setLoading(false)
             console.log('Add Res', res)
             setOpenNotice(true)
@@ -112,7 +109,7 @@ function Song({ song, noneHeart, handleNewSong }) {
         >
             <div className={cls(styles.name)}>
                 <div className={cls(styles.avtImg)}>
-                    <Image src={imgUrl} width={35} height={35}></Image>
+                    <Image src={img} width={35} height={35}></Image>
                     {currentSong !== song ? (
                         <div>
                             <FontAwesomeIcon icon={faPlay} />

@@ -21,7 +21,7 @@ export function PlayListHeader() {
             <div className={cls({ [styles.image]: true, [styles.spiner]: isPlay })}>
                 <Image
                     className={cls({ [styles.discSpin]: isPlay })}
-                    src={currentSong ? currentSong.imgUrl : '/images/disc.png'}
+                    src={currentSong ? currentSong.img : '/images/disc.png'}
                     width={100}
                     height={100}
                     layout="responsive"

@@ -9,7 +9,7 @@ export function SongInformation({ song }) {
     return (
         <div className={cls(styles.songInformation)}>
             <div className={cls(styles.avtImg)}>
-                <Image src={state.currentSong?.imgUrl} width={70} height={70} />
+                <Image src={state.currentSong?.img} width={70} height={70} />
             </div>
             <div className={cls(styles.info)}>
                 <div className={cls(styles.name)}>{state.currentSong?.name}</div>
