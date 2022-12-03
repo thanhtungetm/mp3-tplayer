@@ -41,7 +41,9 @@ function NavBar() {
             <div className={styles.links}>
                 <ul>
                     <li className={cls({ [styles.active]: router.pathname == '/' })}>
-                        <FontAwesomeIcon icon={faMusic} />
+                        <Link href="/">
+                            <FontAwesomeIcon icon={faMusic} />
+                        </Link>
                         <Link href="/">
                             <span>Trang chủ</span>
                         </Link>

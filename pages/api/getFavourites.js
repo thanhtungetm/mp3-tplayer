@@ -1,17 +1,26 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-import excuteQuery from '../../lib/db'
 import { ZingMp3 } from 'zingmp3-api-full'
+import connection from '../../lib/db'
 
 export default async function handler(req, res) {
     try {
         const { username } = req.body
         console.log('GET Favourite: ', username)
-        const result = await excuteQuery({
-            query: 'select * from users, favourites where users.username = favourites.username and  users.username = ?',
-            values: [username],
-        })
-        if (result.length === 0) return res.status(500).json({ mess: 'Error' })
+
+        connection.query(
+            'select * from users, favourites where users.username = favourites.username and  users.username = ?',
+            [username],
+            function (err, result) {
+                if (result.length === 0 && err) return res.status(500).json({ mess: 'Error' })
+                res.status(200).json({ mess: 'ok', list: result })
+            }
+        )
+
+        // const result = await excuteQuery({
+        //     query: 'select * from users, favourites where users.username = favourites.username and  users.username = ?',
+        //     values: [username],
+        // })
+        // if (result.length === 0) return res.status(500).json({ mess: 'Error' })
 
         // const data = []
         // for (let item of result) {
@@ -29,7 +38,7 @@ export default async function handler(req, res) {
         //     })
         // }
 
-        res.status(200).json({ mess: 'ok', list: result })
+       
     } catch (error) {
         console.log(error)
     }

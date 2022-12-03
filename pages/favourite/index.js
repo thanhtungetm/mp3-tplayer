@@ -19,14 +19,19 @@ export default function Favourite(props) {
     const router = useRouter()
 
     const [songs, setSongs] = useState([])
+    const [loading, setLoading] = useState(false)
 
     const fecthFavouriteList = async () => {
         try {
+            setLoading(true)
             const res = await axios.post('/api/getFavourites', { username: user.username })
             console.log('Favourite list: ', res.data)
             const songList = res.data.list
             setSongs(songList)
-        } catch (error) {}
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -73,7 +78,7 @@ export default function Favourite(props) {
             </Head>
             {user && (
                 <MusicPlayerContext.Provider
-                    value={{ songs, state, addSource, addNewSong, removeSong, dispatch }}
+                    value={{ songs, loading, state, addSource, addNewSong, removeSong, dispatch }}
                 >
                     <div className={cls(styles.wrapper)}>
                         <div className={cls(styles.container)}>
@@ -89,7 +94,7 @@ export default function Favourite(props) {
                     </div>
                 </MusicPlayerContext.Provider>
             )}
-            {songs.length === 0 && user && (
+            {loading && user && (
                 <div className="w-full h-[100vh] flex justify-center items-center">
                     <div role="status">
                         <svg

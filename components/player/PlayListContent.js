@@ -7,7 +7,7 @@ import styles from '../../scss/player/PlayListContent.module.scss'
 import Song from './Song'
 
 function PlayListContent() {
-    const { songs } = useContext(MusicPlayerContext)
+    const { songs, loading } = useContext(MusicPlayerContext)
 
     const router = useRouter()
     // console.log("Song from context",songs)
@@ -24,7 +24,7 @@ function PlayListContent() {
                     <Song song={song} key={index} />
                 ))}
 
-                {songs.length === 0 && (
+                {loading && (
                     <div className="w-full grow flex justify-center items-center h-60">
                         <div className="w-20 h-20 border border-purple-500  animate-spin"></div>
                     </div>
